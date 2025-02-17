@@ -1,10 +1,11 @@
 package com.mrflowjavacode.africa;
 
 import com.mrflowjavacode.africa.data.model.Expenses;
-import com.mrflowjavacode.africa.data.repository.ExpenseRepository;
-import com.mrflowjavacode.africa.data.repository.ExpenseRepositoryImpl;
+import com.mrflowjavacode.africa.data.model.Users;
 import com.mrflowjavacode.africa.service.ExpenseService;
 import com.mrflowjavacode.africa.service.ExpenseServiceImpl;
+import com.mrflowjavacode.africa.service.UserService;
+import com.mrflowjavacode.africa.service.UserServiceIml;
 
 import javax.swing.*;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import static java.lang.System.exit;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     private static final ExpenseService expenseService = new ExpenseServiceImpl();
+    private static final UserService userService = new UserServiceIml();
     private static final Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
 //        displayMenu();
@@ -30,7 +32,6 @@ public class Main {
                 2 -> Sign in
                 """;
         String userChoice = JOptionPane.showInputDialog(userOption);
-
         switch (userChoice){
             case "1":
                 signUp();
@@ -44,27 +45,38 @@ public class Main {
                 break;
         }
     }
-
     private static void signIn() {
-        String username = JOptionPane.showInputDialog("Enter your username:");
+        String email = JOptionPane.showInputDialog("Enter your email:");
         String password = JOptionPane.showInputDialog("Enter your password:");
-//        boolean isValidUser = expenseService.authenticateUser(username, password);
-        if("admin".equalsIgnoreCase(username) && "password".equalsIgnoreCase(password))  {
-            JOptionPane.showMessageDialog(null,"Welcome " + username);
+        Users user = userService.login(email, password);
+        if(user!= null){
+            JOptionPane.showMessageDialog(null, "Welcome back, " + user.getFirstName() + "! You are now logged in.");
             displayMenu();
         } else {
-            JOptionPane.showMessageDialog(null,"Invalid username or password. Please try again.");
+            JOptionPane.showMessageDialog(null, "Invalid email or password. Please try again.");
             signIn();
         }
     }
 
     private static void signUp() {
-        String username = JOptionPane.showInputDialog("Enter your username:");
+        String firstName = JOptionPane.showInputDialog("Enter your first name:");
+
+        String lastName = JOptionPane.showInputDialog("Enter your last name:");
+
+        String email = JOptionPane.showInputDialog("Enter your email:");
+        if (!email.contains("@")|| !email.contains(".")){
+            JOptionPane.showMessageDialog(null, "Invalid email format. Please enter a valid email.");
+            signUp();
+            return;
+        }
+
         String password = JOptionPane.showInputDialog("Enter your password:");
+        userService.createUserAccount(new Users(5, firstName, lastName, password, email));
         String confirmPassword = JOptionPane.showInputDialog("Confirm your password:");
         if(password.equals(confirmPassword)){
             JOptionPane.showMessageDialog(null, "Account created successfully. Please sign in.");
-            signIn();
+            displayMenu();
+//            signIn();
         } else {
             JOptionPane.showMessageDialog(null,"Passwords do not match. Please try again.");
             signUp();
@@ -151,7 +163,7 @@ public class Main {
             String answer = JOptionPane.showInputDialog("Do you want to add another expense? (yes/no)");
 
             if (answer.equalsIgnoreCase("no")) {
-                JOptionPane.showMessageDialog(null, "Thank you for using the expense tracker.");
+//                JOptionPane.showMessageDialog(null, "Thank you for using the expense tracker.");
                 displayMenu();
                 break; // Exit the loop
             } else if (!answer.equalsIgnoreCase("yes")) {

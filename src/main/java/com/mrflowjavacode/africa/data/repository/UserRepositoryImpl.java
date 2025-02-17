@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository{
-    private List<Users> listOfUsers = new ArrayList<>();
+    private final List<Users> listOfUsers = new ArrayList<>();
     @Override
-    public void save(Users user) {
+    public Users save(Users user) {
         if (user == null){
             throw new RuntimeException("User is null");
         }
         listOfUsers.add(user);
+        return user;
     }
 
     @Override
@@ -21,7 +22,6 @@ public class UserRepositoryImpl implements UserRepository{
             throw new RuntimeException("User is null");
         }
         listOfUsers.remove(user);
-
     }
 
     @Override
@@ -37,5 +37,25 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public List<Users> findAll() {
         return new ArrayList<>(listOfUsers);
+    }
+
+    @Override
+    public Users findByEmail(String email) {
+        for (Users users: listOfUsers){
+            if(users.getEmail().equalsIgnoreCase(email)){
+                return users;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean findUserByEmail(String email) {
+        for (Users users: listOfUsers){
+            if(users.getEmail().equalsIgnoreCase(email)){
+                return true;
+            }
+        }
+        return false;
     }
 }

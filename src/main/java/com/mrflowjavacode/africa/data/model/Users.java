@@ -9,6 +9,18 @@ public  class Users {
     private String lastName;
     private String email;
     private String password;
+    private boolean isLoggedIn;
+
+    public Users(int id, String firstName, String lastName, String email, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+
+    }
+    public  Users() {}
+
 
     public int getId() {
         return id;
@@ -48,5 +60,13 @@ public  class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
 }

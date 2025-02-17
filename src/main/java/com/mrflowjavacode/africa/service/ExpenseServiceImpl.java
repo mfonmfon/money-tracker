@@ -40,21 +40,37 @@ public class ExpenseServiceImpl implements ExpenseService {
     public String generateReport() {
         List<Expenses> expenseList = expenseRepository.findAll();
         int calculatedAmount = calculateTotalExpense();
+
         if (expenseList.isEmpty()) return "No expenses found";
+
+        // StringBuilder for better formatting
         StringBuilder report = new StringBuilder();
-        report.append  ("Expenses: Report \n");
-        report.append("===================\n\n");
-        report.append("Customer expense:\n");
+
+        // Header Section
+        report.append("===============================================\n");
+        report.append(String.format("%-20s\n", "Expense Report"));
+        report.append("===============================================\n");
+
+        // Table Header
+        report.append("----------------------------------------------------------------------------\n");
+        report.append(String.format("%-10s %-25s %-20s %-10s\n", "ID", "Description", "Category", "Amount"));
+        report.append("----------------------------------------------------------------------------\n");
+
+        // Expenses List
         for (Expenses expense : expenseList) {
-            report.append(String.format("%s - %s (%s): %d\n",
+            report.append(String.format("%-10s %-25s %-20s %-10d\n",
                     expense.getExpenseId(),
                     expense.getExpenseDescription(),
                     expense.getExpenseCategory(),
                     expense.getAmount()));
         }
-        report.append(String.format("\nTotal expense: %d\n", calculatedAmount));
+        // Total Expense at the Bottom
+        report.append("\n================================================\n");
+        report.append(String.format("Overall Total Spending: $%d\n", calculatedAmount));
+        report.append("================================================\n");
         return report.toString();
     }
+
     private void validateAmount(int amount) {
         if (amount <= 0) throw new RuntimeException("Invalid amount");
     }
