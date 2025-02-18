@@ -24,7 +24,6 @@ public class Main {
 //        displayMenu();
         userAuth();
     }
-
     public static void userAuth(){
         String userOption = """
                 Welcome to Expense Tracker Testing System
@@ -120,7 +119,7 @@ public class Main {
     }
     private static void generateReport() {
         String expenseReport = expenseService.generateReport();
-        JOptionPane.showMessageDialog(null, "Total expenses is : " + expenseReport);
+        JOptionPane.showMessageDialog(null,  expenseReport);
         displayMenu();
     }
 
@@ -142,20 +141,27 @@ public class Main {
 
         while (true) {
             String description = JOptionPane.showInputDialog("Enter expense description: ");
+            if (description.isEmpty()) return;
             String amountInput = JOptionPane.showInputDialog("Enter expense amount: ");
+            if (amountInput.isEmpty()) return;
             String category = JOptionPane.showInputDialog("Enter expense category: ");
+            if (category.isEmpty()) return;
 
-            // Parse the amount and handle potential exceptions
-            int amount;
+            int amount = 0;
             try {
                 amount = Integer.parseInt(amountInput);
+                if (amount <= 0) {
+                    JOptionPane.showMessageDialog(null, "Invalid amount. Amount must be greater than zero.");
+                    continue;
+                }
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Invalid amount. Please enter a valid integer.");
-                continue; // Restart the loop for valid inputs
+                JOptionPane.showMessageDialog(null, "Invalid amount. Please enter a valid number.");
+                continue;
             }
 
             LocalDateTime dateTime = LocalDateTime.now();
-            Expenses expense = new Expenses(5, description, amount, category, dateTime); // consider generating a unique ID
+            int expenseId = generateUniqueId(); // Generate a dynamic ID
+            Expenses expense = new Expenses(expenseId, description, amount, category, dateTime);
             expenseService.addExpense(expense);
 
             JOptionPane.showMessageDialog(null, "Expense added successfully on " + dateTime);
@@ -163,15 +169,19 @@ public class Main {
             String answer = JOptionPane.showInputDialog("Do you want to add another expense? (yes/no)");
 
             if (answer.equalsIgnoreCase("no")) {
-//                JOptionPane.showMessageDialog(null, "Thank you for using the expense tracker.");
                 displayMenu();
-                break; // Exit the loop
+                break; // Exit loop
             } else if (!answer.equalsIgnoreCase("yes")) {
                 JOptionPane.showMessageDialog(null, "Invalid option. Please try again.");
-                // Optionally, you could loop back to ask if they want to add another expense
             }
         }
     }
+
+    // Generate a unique expense ID dynamically
+    private static int generateUniqueId() {
+        return (int) (System.currentTimeMillis() & 0xfffffff); // Generates a unique ID
+    }
+
     private static void calculateExpense() {
         JOptionPane.showMessageDialog( null,"Calculate your total expenses");
         var calculatedAmount =   expenseService.calculateTotalExpense();

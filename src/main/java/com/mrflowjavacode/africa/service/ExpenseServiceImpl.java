@@ -43,20 +43,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         if (expenseList.isEmpty()) return "No expenses found";
 
-        // StringBuilder for better formatting
         StringBuilder report = new StringBuilder();
 
-        // Header Section
-        report.append("===============================================\n");
-        report.append(String.format("%-20s\n", "Expense Report"));
-        report.append("===============================================\n");
 
-        // Table Header
+        report.append(String.format("%-10s\n", "Expense Report"));
+        report.append(String.format("Overall Total Spending: $%d\n", calculatedAmount));
+
         report.append("----------------------------------------------------------------------------\n");
-        report.append(String.format("%-10s %-25s %-20s %-10s\n", "ID", "Description", "Category", "Amount"));
+        report.append(String.format("%-25s %-20s %-10s\n","Description", "Category", "Amount"));
         report.append("----------------------------------------------------------------------------\n");
 
-        // Expenses List
         for (Expenses expense : expenseList) {
             report.append(String.format("%-10s %-25s %-20s %-10d\n",
                     expense.getExpenseId(),
@@ -64,14 +60,10 @@ public class ExpenseServiceImpl implements ExpenseService {
                     expense.getExpenseCategory(),
                     expense.getAmount()));
         }
-        // Total Expense at the Bottom
-        report.append("\n================================================\n");
-        report.append(String.format("Overall Total Spending: $%d\n", calculatedAmount));
-        report.append("================================================\n");
         return report.toString();
     }
 
     private void validateAmount(int amount) {
-        if (amount <= 0) throw new RuntimeException("Invalid amount");
+        if (amount < 0) throw new RuntimeException("Invalid amount");
     }
 }
