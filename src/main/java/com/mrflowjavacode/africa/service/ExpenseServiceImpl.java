@@ -53,14 +53,22 @@ public class ExpenseServiceImpl implements ExpenseService {
         report.append(String.format("%-25s %-20s %-10s\n","Description", "Category", "Amount"));
         report.append("----------------------------------------------------------------------------\n");
 
-        for (Expenses expense : expenseList) {
-            report.append(String.format("%-10s %-25s %-20s %-10d\n",
-                    expense.getExpenseId(),
+       for (Expenses expense : expenseList) {
+                report.append(String.format("%-10s %-25s %-20s %-10d\n",
+                        expense.getExpenseId(),
                     expense.getExpenseDescription(),
                     expense.getExpenseCategory(),
                     expense.getAmount()));
         }
         return report.toString();
+    }
+
+    @Override
+    public Expenses getExpensesById(int id) {
+        for(Expenses expenses: expenseRepository.findAll()){
+            if(expenses.getExpenseId() == id) return expenses;
+        }
+        return null;
     }
 
     private void validateAmount(int amount) {

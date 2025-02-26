@@ -2,6 +2,7 @@ package com.mrflowjavacode.africa.data.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public  class Users {
     private int id;
@@ -20,6 +21,7 @@ public  class Users {
 
     }
     public  Users() {}
+
 
 
     public int getId() {

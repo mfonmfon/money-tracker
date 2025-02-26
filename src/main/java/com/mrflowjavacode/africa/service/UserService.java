@@ -12,4 +12,6 @@ public interface UserService {
     Users updateUser(Users user);
     void deleteUser(Users user);
     List<Users> getAllUsers();
+    boolean getUserByEmail(String email);
+
 }

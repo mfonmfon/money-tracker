@@ -2,8 +2,7 @@ package com.mrflowjavacode.africa.data.repository;
 
 import com.mrflowjavacode.africa.data.model.Expenses;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ExpenseRepositoryImpl implements ExpenseRepository{
 
@@ -20,21 +19,24 @@ public class ExpenseRepositoryImpl implements ExpenseRepository{
     }
 
     @Override
-    public void delete(Expenses expense) {
-        if (expense == null) {
-            throw new RuntimeException("Expense is null");
+    public void delete(Expenses expenses) {
+        for (Expenses expense : expensesList) {
+            if(expense.equals(expenses)){
+                expensesList.remove(expenses);
+                break;
+            }
         }
-        expensesList.remove(expense);
     }
 
     @Override
     public Expenses findById(int id) {
-        for (Expenses expenses: expensesList){
-            if (expenses.getExpenseId() == id){
-                return expenses;
+        for(Expenses expense : expensesList){
+            if(expense.getExpenseId() == id){
+                return expense;
             }
         }
         return null;
+
     }
 
     @Override

@@ -59,4 +59,9 @@ public class UserServiceIml implements UserService {
     public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
+
+    @Override
+    public boolean getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
 }

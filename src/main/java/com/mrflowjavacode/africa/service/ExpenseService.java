@@ -14,4 +14,6 @@ public interface ExpenseService {
     List<Expenses> expenseList();
 
     String generateReport();
+
+    Expenses getExpensesById(int id);
 }
